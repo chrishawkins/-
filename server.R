@@ -6,18 +6,19 @@
 #
 
 library(shiny)
+library(MASS)
 
 shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
+  
+  model <- glm(Hwt ~ Sex + Bwt, data = cats)
+  
+  prediction <- reactive({
+    gender <- substr(input$gender, 0, 1)
+    newdata <- data.frame(gender, input$weight)
+    names(newdata) <- c("Sex", "Bwt")
+    predict(model, newdata)
   })
   
+  output$outputString <- renderText(paste("Your cat's heart weighs around ", round(prediction(), digits = 2), "grams."))
+  output$code <- renderPrint("model <- glm(Hwt ~ Sex + Bwt, data = cats)")
 })

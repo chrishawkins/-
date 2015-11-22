@@ -9,24 +9,28 @@ library(shiny)
 
 shinyUI(pageWithSidebar(
   
-  # Application title
-  headerPanel("What's your cat like?"),
-  
-  selectInput("gender", "Gender:", 
-              choices = c("Male", "Female")),
+  headerPanel("🐱 ❤ ⚖"),
   
   # Sidebar with a slider input for number of bins
   sidebarPanel(
-    sliderInput("c",
-                "Cat weight (kg):",
+    selectInput("gender", "Gender:", 
+                choices = c("Male", "Female")),
+    
+    sliderInput("weight",
+                "Weight (kg):",
                 min = 1,
-                max = 20,
-                value = 5,
+                max = 8,
+                value = 4,
                 step = 0.1)
   ),
   
   # Show a plot of the generated distribution
   mainPanel(
-    plotOutput("distPlot")
+    p(strong("Select your cat's sex and weight using the controls on the left. The weight
+      of your cat's heart will then be predicted using a linear model.")),
+    p(textOutput("outputString")),
+    hr(),
+    p(strong("The code for model generation is provided below:")),
+    verbatimTextOutput("code")
   )
 ))
